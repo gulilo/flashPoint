@@ -2,11 +2,9 @@ package board;
 
 import actions.*;
 import exeptions.BadBoardException;
-import mecanics.ArraylistHelper;
 import mecanics.Direction;
 import pieces.Piece;
 import pieces.Player;
-import pieces.Victim;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -37,7 +35,7 @@ public class Board
 	
 	public Board(AbstractTile[][] board)
 	{
-		size = new Point(board.length/2,board[0].length/2);//maybe?
+		size = new Point(board.length / 2, board[0].length / 2);//maybe?
 		this.board = board;
 	}
 	
@@ -53,82 +51,85 @@ public class Board
 	}
 	
 	//TODO write getAvailableActions
-	public ArrayList<Action> getAvailableActions(Player player)
+	public ArrayList<PlayerAction> getAvailableActions(Player player) throws BadBoardException
 	{
-		ArrayList<Action> ans = new ArrayList<>();
-		Point playerLocation = Board.findPlayer(player,this);
-		
-		Point up = getTileInDirection(playerLocation,Direction.up,this);
-		Point down = getTileInDirection(playerLocation,Direction.down,this);
-		Point left = getTileInDirection(playerLocation,Direction.left,this);
-		Point right = getTileInDirection(playerLocation,Direction.right,this);
-		
-		Tile tile = getTile(playerLocation);
-		if(player.isCarry())
+		ArrayList<PlayerAction> ans = new ArrayList<>();
+		Point playerLocation = Board.findPlayer(player, this);
+		if(playerLocation != null)
 		{
-			//leave victim
-			ans.add(new LeaveVictim());
+			PlayerAction action = null;
+			System.out.println(Direction.valueOf("stay"));
+			for(Direction d : Direction.values())
+			{
+				action = new Move(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new MoveToFire(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new MoveWithVictim(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new OpenCloseDoor(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new Chop(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new Extinguish(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+				action = new RemoveFire(d);
+				if(action.isAvailable(player, playerLocation, this))
+				{
+					ans.add(action);
+				}
+			}
+			action = new CarryVictim();
+			if(action.isAvailable(player, playerLocation, this))
+			{
+				ans.add(action);
+			}
+			action = new LeaveVictim();
+			if(action.isAvailable(player, playerLocation, this))
+			{
+				ans.add(action);
+			}
 		}
 		else
 		{
-			//carry victim
-			if(ArraylistHelper.containsInstance(tile.getPieces(), Victim.class))
+			for(int i = 0; i< size.x;i++)
 			{
-				ans.add(new CarryVictim());
+				ans.add(new FirstAction(new Point(0,i)));
+				ans.add(new FirstAction(new Point(size.x-1,i)));
 			}
-			
-		}
-		try
-		{
-			//open close door
-			if(isDoor(playerLocation,up))
+			for(int i = 0; i< size.y;i++)
 			{
-				ans.add(new OpenCloseDoor(Direction.up));
-			}
-			if(isDoor(playerLocation,down))
-			{
-				ans.add(new OpenCloseDoor(Direction.down));
-			}
-			if(isDoor(playerLocation,left))
-			{
-				ans.add(new OpenCloseDoor(Direction.left));
-			}
-			if(isDoor(playerLocation,right))
-			{
-				ans.add(new OpenCloseDoor(Direction.right));
-			}
-			
-			//chop wall
-			if(isWall(playerLocation,up) && !getWall(playerLocation,up).isBroken())
-			{
-				ans.add(new Chop(Direction.up));
-			}
-			if(isDoor(playerLocation,down)&& !getWall(playerLocation,down).isBroken())
-			{
-				ans.add(new Chop(Direction.down));
-			}
-			if(isDoor(playerLocation,left)&& !getWall(playerLocation,left).isBroken())
-			{
-				ans.add(new Chop(Direction.left));
-			}
-			if(isDoor(playerLocation,right)&& !getWall(playerLocation,right).isBroken())
-			{
-				ans.add(new Chop(Direction.right));
+				ans.add(new FirstAction(new Point(i,0)));
+				ans.add(new FirstAction(new Point(i,size.y-1)));
 			}
 		}
-		catch(BadBoardException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+		return ans;
 	}
 	
 	public int numberOfWallDamage()
 	{
 		int ans = 0;
-		for(int i = 0;i < board.length;i++)
+		for(int i = 0; i < board.length; i++)
 		{
-			for(int j = 0;j < board[0].length;j++)
+			for(int j = 0; j < board[0].length; j++)
 			{
 				if(board[i][j] instanceof WallTile)
 				{
@@ -190,13 +191,21 @@ public class Board
 	
 	public boolean isWall(Point p1, Point p2) throws BadBoardException
 	{
-		Point loc = pointBetween(getActualLocation(p1),getActualLocation(p2));
+		if(p1.equals(p2))
+		{
+			return false;
+		}
+		Point loc = pointBetween(getActualLocation(p1), getActualLocation(p2));
 		return board[loc.x][loc.y] instanceof WallTile;
 	}
 	
 	public boolean isDoor(Point p1, Point p2) throws BadBoardException
 	{
-		Point loc = pointBetween(getActualLocation(p1),getActualLocation(p2));
+		if(p1.equals(p2))
+		{
+			return false;
+		}
+		Point loc = pointBetween(getActualLocation(p1), getActualLocation(p2));
 		return board[loc.x][loc.y] instanceof DoorTile;
 	}
 	
@@ -300,7 +309,7 @@ public class Board
 	{
 		Point location = getActualLocation(oldLocation);
 		Point newLocation = getLocationInDirection(direction, location);
-		if(!isValidLocation(newLocation,board))
+		if(!isValidLocation(newLocation, board))
 		{
 			return null;
 		}
@@ -333,9 +342,6 @@ public class Board
 			case right:
 				newLocation.y += 1;
 				break;
-			case stay:
-				newLocation = oldLocation;
-				break;
 		}
 		return newLocation;
 	}
@@ -363,7 +369,7 @@ public class Board
 		{
 			for(int j = 0; j < board.getSize().y; j++)
 			{
-				Tile tile = board.getTile(new Point(i,j));
+				Tile tile = board.getTile(new Point(i, j));
 				if(tile.getPieces().contains(p))
 				{
 					return new Point(i, j);

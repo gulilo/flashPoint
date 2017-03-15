@@ -1,8 +1,13 @@
 package mecanics;
 
+import Gui.MainPanel;
 import actions.Action;
+import actions.PlayerAction;
 import board.Board;
+import exeptions.ActionException;
 import exeptions.BadBoardException;
+import exeptions.PoiException;
+import exeptions.WallException;
 import pieces.Human;
 import pieces.Player;
 
@@ -20,13 +25,14 @@ public class GameMaster
 	private int turn;
 	private ArrayList<Action> pastActions;
 	
+	private MainPanel mainPanel; // TEMPERARy
+	
 	public static GameMaster getInstance()
 	{
 		if(instance == null)
 		{
 			instance = new GameMaster();
 		}
-		
 		return instance;
 	}
 	
@@ -45,6 +51,7 @@ public class GameMaster
 		initBoard();
 		turn = 0;
 		pastActions = new ArrayList<>();
+		
 	}
 	
 	private void initBoard()
@@ -105,5 +112,28 @@ public class GameMaster
 	public void addPastAction(Action action)
 	{
 		pastActions.add(action);
+	}
+	
+	public void doAction(PlayerAction action)
+	{
+		try
+		{
+			board = Reducer.doAction(getCurrentPlayer(),action,board);
+		}
+		catch(ActionException | BadBoardException | WallException | PoiException e)
+		{
+			e.printStackTrace();
+		}
+		mainPanel.updateComboBox();
+	}
+	
+	public void updateList()
+	{
+		mainPanel.updateComboBox();
+	}
+	//TEMPORARY
+	public void setMainPanel(MainPanel mainPanel)
+	{
+		this.mainPanel = mainPanel;
 	}
 }

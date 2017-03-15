@@ -1,5 +1,7 @@
 package Gui;
 
+import mecanics.GameMaster;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,8 +20,10 @@ public class Window extends JFrame
 		setSize(DEFAULT_SIZE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setContentPane(new MainPanel(getSize()));
 		
+		MainPanel panel = new MainPanel(getSize());
+		setContentPane(panel);
+		GameMaster.getInstance().setMainPanel(panel);
 		setVisible(true);
 	}
 	

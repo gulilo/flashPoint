@@ -7,18 +7,5 @@ public class test
 	{
 		GameMaster.getInstance().startGame(1);
 		Window w = new Window();
-		
-		while(true)
-		{
-			w.repaint();
-			try
-			{
-				Thread.sleep(40);
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
 	}
 }

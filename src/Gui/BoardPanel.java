@@ -7,15 +7,15 @@ import mecanics.GameMaster;
 import javax.swing.*;
 import java.awt.*;
 
+import static Gui.TilePanel.TILE_SIZE;
+import static Gui.WallPanel.HOR_WALL_SIZE;
+import static Gui.WallPanel.VER_WALL_SIZE;
+
 public class BoardPanel extends JPanel
 {
-	private final Dimension TILE_SIZE = new Dimension(50, 50);
-	private final Dimension HOR_WALL_SIZE = new Dimension(5, 50);
-	private final Dimension VER_WALL_SIZE = new Dimension(50, 5);
-	
-	
 	public BoardPanel(Point location, Dimension size)
 	{
+		super();
 		setLayout(null);
 		setSize(size);
 		setLocation(location);
@@ -80,7 +80,7 @@ public class BoardPanel extends JPanel
 					}
 				}
 				
-				add(new TilePanel(tileLocation, TILE_SIZE, board.getTile(new Point(i, j))));
+				add(new TilePanel(tileLocation, board.getTile(new Point(i, j))));
 				tileLocation = new Point(tileLocation.x + TILE_SIZE.width + 2, tileLocation.y);
 			}
 			tileLocation = new Point(2, tileLocation.y + TILE_SIZE.height + 2);

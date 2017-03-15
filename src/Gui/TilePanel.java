@@ -9,13 +9,15 @@ import java.util.ArrayList;
 
 public class TilePanel extends JPanel
 {
+	public static final Dimension TILE_SIZE = new Dimension(50, 50);
 	private Tile tile;
 	
-	public TilePanel(Point location, Dimension size, Tile tile)
+	public TilePanel(Point location, Tile tile)
 	{
+		super();
 		setLayout(null);
 		setLocation(location);
-		setSize(size);
+		setSize(TILE_SIZE);
 		setBackground(new Color(255,130,40));
 		this.tile = tile;
 	}

@@ -14,6 +14,7 @@ public class DoorPanel extends JPanel
 	
 	public DoorPanel(Point location, Dimension size, DoorTile tile)
 	{
+		super();
 		setLayout(null);
 		setLocation(location);
 		setSize(size);

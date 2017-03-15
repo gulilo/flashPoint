@@ -24,7 +24,14 @@ public class Reducer
 				Point playerLocation = Board.findPlayer(player, board);
 				if(playerLocation == null)
 				{
-					throw new BadBoardException("player given is not on the board");
+					if(action instanceof FirstAction)
+					{
+						doFirstAction(player, (FirstAction) action, newBoard);
+					}
+					else
+					{
+						throw new BadBoardException("player given is not on the board");
+					}
 				}
 				Direction direction = ((PlayerAction) action).getDirection();
 				if(action instanceof MoveWithVictim)
@@ -83,6 +90,16 @@ public class Reducer
 		}
 		GameMaster.getInstance().addPastAction(action);
 		return newBoard;
+	}
+	
+	private static void doFirstAction(Player player, FirstAction action, Board board) throws FirstActionException
+	{
+		Point loc = action.getTile();
+		if(!(loc.x == 0 || loc.y == 0 || loc.x == board.getSize().x-1 || loc.y == board.getSize().y-1))
+		{
+			throw new FirstActionException("cant place inside the house");
+		}
+		board.addPiece(loc,player);
 	}
 	
 	private static void doReplenishPoi(ReplenishPoi action, Board board) throws ReplenishPoiException, PoiException

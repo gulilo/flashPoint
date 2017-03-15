@@ -1,6 +1,11 @@
 package actions;
 
+import board.Board;
+import exeptions.BadBoardException;
 import mecanics.Direction;
+import pieces.Player;
+
+import java.awt.*;
 
 public class Chop extends PlayerAction
 {
@@ -8,5 +13,16 @@ public class Chop extends PlayerAction
 	{
 		super(direction);
 		cost = 2;
+	}
+	
+	@Override
+	public boolean isAvailable(Player player, Point playerLocation, Board board) throws BadBoardException
+	{
+		if(player.getActionPoints() < cost)
+		{
+			return false;
+		}
+		Point p = Board.getLocationInDirection(direction,playerLocation);
+		return Board.isValidLocation(p,board) && board.isWall(playerLocation, p) && !board.getWall(playerLocation, p).isBroken();
 	}
 }
