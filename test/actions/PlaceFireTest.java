@@ -106,7 +106,7 @@ public class PlaceFireTest
 		Fire fire = new Fire();
 		board.addPiece(new Point(2, 2), fire);
 		Smoke smoke = new Smoke();
-		Human human = new Human();
+		Human human = new Human(Color.BLUE);
 		Victim victim = new Victim();
 		WallTile wall = null;
 		try

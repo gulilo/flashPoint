@@ -29,4 +29,10 @@ public class LeaveVictim extends PlayerAction
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "LeaveVictim";
+	}
 }

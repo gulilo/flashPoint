@@ -19,18 +19,18 @@ public class MainPanel extends JPanel
 		setLocation(0, 0);
 		setSize(size);
 		setBackground(Color.red);
-		
-		add(new BoardPanel(new Point(10, 10), new Dimension(350,280)));
+		Dimension boardSize = new Dimension(TilePanel.TILE_SIZE.width* GameMaster.getInstance().getBoard().getSize().y, TilePanel.TILE_SIZE.height * GameMaster.getInstance().getBoard().getSize().x);
+		add(new BoardPanel(new Point(10, 10), boardSize));
 		
 		availableActions = new JComboBox<>();
 		availableActions.setSize(150,30);
-		availableActions.setLocation(500,50);
+		availableActions.setLocation(50,boardSize.height+30);
 		add(availableActions);
 		updateComboBox();
 		
 		JButton doAction = new JButton("do action");
-		doAction.setSize(150,100);
-		doAction.setLocation(500,100);
+		doAction.setSize(150,70);
+		doAction.setLocation(50,boardSize.height+70);
 		doAction.addActionListener(e -> GameMaster.getInstance().doAction((PlayerAction) availableActions.getSelectedItem()));
 		add(doAction);
 		
@@ -38,7 +38,7 @@ public class MainPanel extends JPanel
 	
 	public void updateComboBox()
 	{
-		availableActions.setModel(new DefaultComboBoxModel<PlayerAction>());
+		availableActions.setModel(new DefaultComboBoxModel<>());
 		try
 		{
 			ArrayList<PlayerAction> actions = GameMaster.getInstance().getBoard().getAvailableActions(GameMaster.getInstance().getCurrentPlayer());

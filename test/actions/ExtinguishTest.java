@@ -28,7 +28,7 @@ public class ExtinguishTest
 	{
 		board = new Board(new Point(3,3));
 		
-		player = new Human();
+		player = new Human(Color.BLUE);
 		board.addPiece(new Point(1, 1), player);
 		action = new Extinguish(Direction.up);
 	}
@@ -96,7 +96,7 @@ public class ExtinguishTest
 	@Test
 	void actionExtinguishPlayer()
 	{
-		board.addPiece(new Point(0,1),new Human());
+		board.addPiece(new Point(0,1),new Human(Color.BLUE));
 		assertThrows(ExtinguishException.class, () ->
 		{
 			Reducer.doAction(player, action, board);

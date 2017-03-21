@@ -2,16 +2,20 @@ package pieces;
 
 import exeptions.ActionException;
 
+import java.awt.*;
+
 public abstract class Player extends Piece
 {
 	public static final int MAX_ACTION_POINTS = 8;
+	private Color color;
 	
 	private int actionPoints;
 	private boolean carryVictim;
 	
-	public Player()
+	public Player(Color color)
 	{
 		actionPoints = 4;
+		this.color = color;
 	}
 	
 	public int getActionPoints()
@@ -49,5 +53,10 @@ public abstract class Player extends Piece
 	public boolean isCarry()
 	{
 		return carryVictim;
+	}
+	
+	public Color getColor()
+	{
+		return color;
 	}
 }

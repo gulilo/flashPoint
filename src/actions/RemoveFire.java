@@ -34,4 +34,10 @@ public class RemoveFire extends PlayerAction
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "RemoveFire "+direction.toString();
+	}
 }

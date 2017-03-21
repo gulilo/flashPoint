@@ -20,17 +20,14 @@ public class BoardPanel extends JPanel
 		setSize(size);
 		setLocation(location);
 		setBackground(Color.black);
-		Board board = GameMaster.getInstance().getBoard();
-		
-		
+		updateBoard();
 	}
 	
-	@Override
-	protected void paintComponent(Graphics g)
+	private void updateBoard()
 	{
-		super.paintComponent(g);
+		removeAll();
 		Board board = GameMaster.getInstance().getBoard();
-		Point tileLocation = new Point(2, 2);
+		Point tileLocation = new Point(0, 0);
 		Point wallLocation;
 		for(int i = 0; i < board.getSize().x; i++)
 		{
@@ -39,7 +36,6 @@ public class BoardPanel extends JPanel
 				wallLocation = new Point(tileLocation.x-3,tileLocation.y-3);
 				Point p1 = new Point(i, j);
 				Point p2 = new Point(i - 1, j);
-				
 				if(Board.isValidLocation(p2, board))
 				{
 					try
@@ -79,12 +75,17 @@ public class BoardPanel extends JPanel
 						e.printStackTrace();
 					}
 				}
-				
 				add(new TilePanel(tileLocation, board.getTile(new Point(i, j))));
-				tileLocation = new Point(tileLocation.x + TILE_SIZE.width + 2, tileLocation.y);
+				tileLocation = new Point(tileLocation.x + TILE_SIZE.width, tileLocation.y);
 			}
-			tileLocation = new Point(2, tileLocation.y + TILE_SIZE.height + 2);
+			tileLocation = new Point(0, tileLocation.y + TILE_SIZE.height);
 		}
-		
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		updateBoard();
 	}
 }

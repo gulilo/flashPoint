@@ -33,4 +33,10 @@ public class Extinguish extends PlayerAction
 			}
 		} return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Extinguish "+ direction.toString();
+	}
 }

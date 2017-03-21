@@ -70,7 +70,7 @@ public class Reducer
 				{
 					doLeaveVictim(player, playerLocation, newBoard);
 				}
-				player.useActionPoints(((PlayerAction) action).getCost());
+				//player.useActionPoints(((PlayerAction) action).getCost());////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
 			else
 			{
@@ -195,10 +195,10 @@ public class Reducer
 		{
 			doExplosion(location, board);
 		}
-		else if((Board.getTileInDirection(location, Direction.up, board) != null && ArraylistHelper.containsInstance(((Tile) Board.getTile(Board.getTileInDirection(location, Direction.up, board), board)).getPieces(), Fire.class))
-				|| (Board.getTileInDirection(location, Direction.down, board) != null && ArraylistHelper.containsInstance(((Tile) Board.getTile(Board.getTileInDirection(location, Direction.down, board), board)).getPieces(), Fire.class))
-				|| (Board.getTileInDirection(location, Direction.left, board) != null && ArraylistHelper.containsInstance(((Tile) Board.getTile(Board.getTileInDirection(location, Direction.left, board), board)).getPieces(), Fire.class))
-				|| (Board.getTileInDirection(location, Direction.right, board) != null && ArraylistHelper.containsInstance(((Tile) Board.getTile(Board.getTileInDirection(location, Direction.right, board),board)).getPieces(), Fire.class)))
+		else if((Board.getTileInDirection(location, Direction.up, board) != null && ArraylistHelper.containsInstance(Board.getTile(Board.getTileInDirection(location, Direction.up, board), board).getPieces(), Fire.class))
+				|| (Board.getTileInDirection(location, Direction.down, board) != null && ArraylistHelper.containsInstance(Board.getTile(Board.getTileInDirection(location, Direction.down, board), board).getPieces(), Fire.class))
+				|| (Board.getTileInDirection(location, Direction.left, board) != null && ArraylistHelper.containsInstance(Board.getTile(Board.getTileInDirection(location, Direction.left, board), board).getPieces(), Fire.class))
+				|| (Board.getTileInDirection(location, Direction.right, board) != null && ArraylistHelper.containsInstance(Board.getTile(Board.getTileInDirection(location, Direction.right, board), board).getPieces(), Fire.class)))
 		{
 			tile.addPiece(new Fire());
 		}
@@ -296,11 +296,9 @@ public class Reducer
 	
 	private static void flashOverHelper(Point cur, Direction direction, Board board, ArrayList<Point> fires)
 	{
-		System.out.println(Board.getLocationInDirection(direction,cur));
 		Point p;
 		if((p = Board.getTileInDirection(cur,direction,board)) != null && ArraylistHelper.containsInstance(board.getTile(p).getPieces(),Smoke.class))
 		{
-			System.out.println("bla");
 			Tile tile = board.getTile(p);
 			Smoke smoke = null;
 			for(int a = 0; a < tile.getPieces().size(); a++)
@@ -325,7 +323,7 @@ public class Reducer
 			throw new MoveWithVictimException("the player is not carrying a victim");
 		}
 		Point newLocation = Board.getLocationInDirection(direction,playerLocation);
-		Tile tile = (Tile) board.getTile(newLocation);
+		Tile tile = board.getTile(newLocation);
 		if(ArraylistHelper.containsInstance(tile.getPieces(),Fire.class))
 		{
 			throw new MoveWithVictimException("cant move to fire with victim");
@@ -365,9 +363,7 @@ public class Reducer
 	
 	private static void doCarryVictim(Player player, Point playerLocation, Board board) throws CarryVictimException
 	{
-		System.out.println(playerLocation);
 		Tile tile = board.getTile(playerLocation);
-		System.out.println(tile.getPieces());
 		if(ArraylistHelper.containsInstance(tile.getPieces(), Victim.class))
 		{
 			Victim victim = null;
@@ -395,7 +391,7 @@ public class Reducer
 		{
 			throw new RemoveFireException("cant remove fire through wall or door");
 		}
-		Tile tile = (Tile) board.getTile(flameLocation);
+		Tile tile = board.getTile(flameLocation);
 		if(ArraylistHelper.containsInstance(tile.getPieces(), Fire.class))
 		{
 			Fire fire = null;
@@ -476,7 +472,7 @@ public class Reducer
 		{
 			throw new MoveException("cant move trough wall or closed door");
 		}
-		Tile tile = (Tile) board.getTile(newLocation);
+		Tile tile = board.getTile(newLocation);
 		if(ArraylistHelper.containsInstance(tile.getPieces(), HiddenPoi.class))
 		{
 			HiddenPoi poi = null;

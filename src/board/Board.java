@@ -58,33 +58,35 @@ public class Board
 		if(playerLocation != null)
 		{
 			PlayerAction action = null;
-			System.out.println(Direction.valueOf("stay"));
 			for(Direction d : Direction.values())
 			{
 				action = new Move(d);
-				if(action.isAvailable(player, playerLocation, this))
+				if(d != Direction.stay)
 				{
-					ans.add(action);
-				}
-				action = new MoveToFire(d);
-				if(action.isAvailable(player, playerLocation, this))
-				{
-					ans.add(action);
-				}
-				action = new MoveWithVictim(d);
-				if(action.isAvailable(player, playerLocation, this))
-				{
-					ans.add(action);
-				}
-				action = new OpenCloseDoor(d);
-				if(action.isAvailable(player, playerLocation, this))
-				{
-					ans.add(action);
-				}
-				action = new Chop(d);
-				if(action.isAvailable(player, playerLocation, this))
-				{
-					ans.add(action);
+					if(action.isAvailable(player, playerLocation, this))
+					{
+						ans.add(action);
+					}
+					action = new MoveToFire(d);
+					if(action.isAvailable(player, playerLocation, this))
+					{
+						ans.add(action);
+					}
+					action = new MoveWithVictim(d);
+					if(action.isAvailable(player, playerLocation, this))
+					{
+						ans.add(action);
+					}
+					action = new OpenCloseDoor(d);
+					if(action.isAvailable(player, playerLocation, this))
+					{
+						ans.add(action);
+					}
+					action = new Chop(d);
+					if(action.isAvailable(player, playerLocation, this))
+					{
+						ans.add(action);
+					}
 				}
 				action = new Extinguish(d);
 				if(action.isAvailable(player, playerLocation, this))
@@ -241,7 +243,6 @@ public class Board
 	{
 		
 		Tile tile = getTile(location);
-		System.out.println(tile);
 		tile.addPiece(piece);
 	}
 	

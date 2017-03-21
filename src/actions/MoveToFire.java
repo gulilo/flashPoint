@@ -24,4 +24,10 @@ public class MoveToFire extends Move
 		Point p = Board.getTileInDirection(playerLocation,direction,board);
 		return move && !player.isCarry() && p != null && ArraylistHelper.containsInstance(board.getTile(p).getPieces(), Fire.class);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "MoveToFire " +direction.toString();
+	}
 }

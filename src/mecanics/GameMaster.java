@@ -4,10 +4,13 @@ import Gui.MainPanel;
 import actions.Action;
 import actions.PlayerAction;
 import board.Board;
+import board.DoorTile;
 import exeptions.ActionException;
 import exeptions.BadBoardException;
 import exeptions.PoiException;
 import exeptions.WallException;
+import pieces.Fire;
+import pieces.HiddenPoi;
 import pieces.Human;
 import pieces.Player;
 
@@ -16,9 +19,6 @@ import java.util.ArrayList;
 
 public class GameMaster
 {
-	private final Point[][] WALLS = {{new Point(0,1),new Point(1,1)},{new Point(0,2),new Point(1,2)},{new Point(0,3),new Point(1,3)},{new Point(0,4),new Point(1,4)},{}	};
-	private final Point[][] DOORS = {};
-	
 	private static GameMaster instance;
 	private static Board board;
 	private Player[] players;
@@ -44,9 +44,9 @@ public class GameMaster
 	public void startGame(int numberOfPlayers)
 	{
 		players = new Player[numberOfPlayers];
-		for(int i = 0;i< players.length;i++)
+		for(int i = 0; i < players.length; i++)
 		{
-			players[i] = new Human();
+			players[i] = new Human(Color.BLUE);
 		}
 		initBoard();
 		turn = 0;
@@ -56,19 +56,44 @@ public class GameMaster
 	
 	private void initBoard()
 	{
-		board = new Board(new Point(8,10));
+		board = new Board(new Point(8, 10));
 		try
 		{
-			for(int i = 0;i<WallsDoors.WALLS.length;i++)
+			for(int i = 0; i < WallsDoors.WALLS.length; i++)
 			{
-				board.addWall(WallsDoors.WALLS[i][0],WallsDoors.WALLS[i][1]);
+				board.addWall(WallsDoors.WALLS[i][0], WallsDoors.WALLS[i][1]);
 			}
-			for( int i = 0;i< WallsDoors.DOORS.length;i++)
+			for(int i = 0; i < WallsDoors.DOORS.length; i++)
 			{
-				board.addDoor(WallsDoors.DOORS[i][0],WallsDoors.DOORS[i][1]);
+				DoorTile door = board.addDoor(WallsDoors.DOORS[i][0], WallsDoors.DOORS[i][1]);
+				if(WallsDoors.DOOR_STATE[i])
+				{
+					door.changeState();
+				}
 			}
 		}
 		catch(BadBoardException e)
+		{
+			e.printStackTrace();
+		}
+		board.addPiece(new Point(2, 2), new Fire());
+		board.addPiece(new Point(2, 3), new Fire());
+		board.addPiece(new Point(3, 2), new Fire());
+		board.addPiece(new Point(3, 3), new Fire());
+		board.addPiece(new Point(3, 4), new Fire());
+		board.addPiece(new Point(3, 5), new Fire());
+		board.addPiece(new Point(4, 4), new Fire());
+		board.addPiece(new Point(5, 6), new Fire());
+		board.addPiece(new Point(5, 7), new Fire());
+		board.addPiece(new Point(6, 6), new Fire());
+		
+		try
+		{
+			board.addPiece(new Point(5,1),new HiddenPoi());
+			board.addPiece(new Point(2,4),new HiddenPoi());
+			board.addPiece(new Point(5,8),new HiddenPoi());
+		}
+		catch(PoiException e)
 		{
 			e.printStackTrace();
 		}
@@ -118,19 +143,30 @@ public class GameMaster
 	{
 		try
 		{
-			board = Reducer.doAction(getCurrentPlayer(),action,board);
+			board = Reducer.doAction(getCurrentPlayer(), action, board);
 		}
 		catch(ActionException | BadBoardException | WallException | PoiException e)
 		{
 			e.printStackTrace();
 		}
+		
+/*		for(int i = 0;i < board.getSize().x;i++)
+		{
+			for(int j = 0;j < board.getSize().y;j++)
+			{
+				System.out.print(board.getTile(new Point(i,j)).getPieces());
+			}
+			System.out.println();
+		}*/
 		mainPanel.updateComboBox();
+		mainPanel.repaint();
 	}
 	
 	public void updateList()
 	{
 		mainPanel.updateComboBox();
 	}
+	
 	//TEMPORARY
 	public void setMainPanel(MainPanel mainPanel)
 	{

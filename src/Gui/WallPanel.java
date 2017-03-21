@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class WallPanel extends JPanel
 {
-	public static final Dimension HOR_WALL_SIZE = new Dimension(5, 50);
-	public static final Dimension VER_WALL_SIZE = new Dimension(50, 5);
+	public static final Dimension HOR_WALL_SIZE = new Dimension(5, 100);
+	public static final Dimension VER_WALL_SIZE = new Dimension(100, 5);
 	
 	private final Color FIX_COLOR = new Color(60 ,70,200);
 	private final Color DMG_COLOR = new Color(0 ,160,230);

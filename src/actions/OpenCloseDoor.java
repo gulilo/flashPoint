@@ -25,4 +25,10 @@ public class OpenCloseDoor extends PlayerAction
 		Point p = Board.getLocationInDirection(direction,playerLocation);
 		return Board.isValidLocation(p,board) && board.isDoor(playerLocation, p);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "OpenCloseDoor "+direction.toString();
+	}
 }

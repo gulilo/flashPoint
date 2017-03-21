@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class Window extends JFrame
 {
-	private final Dimension DEFAULT_SIZE = new Dimension(700, 700);
-	private final Point DEFAULT_LOCATION = new Point(200, 200);
+	private final Dimension DEFAULT_SIZE = new Dimension(1000, 1000);
+	private final Point DEFAULT_LOCATION = new Point(100, 100);
 	
 	public Window()
 	{

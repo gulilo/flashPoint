@@ -32,7 +32,7 @@ public class carryVictimTest
 		GameMaster.getInstance().startGame(1);
 		board = new Board(new Point(3,3));
 		
-		player = new Human();
+		player = new Human(Color.BLUE);
 		board.addPiece(new Point(1,1),player);
 		action = new CarryVictim();
 	}

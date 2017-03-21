@@ -24,4 +24,10 @@ public class Move extends PlayerAction
 		}
 		return Board.getTileInDirection(playerLocation, direction, board) != null;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Move "+ direction.toString();
+	}
 }

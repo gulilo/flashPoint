@@ -25,4 +25,10 @@ public class Chop extends PlayerAction
 		Point p = Board.getLocationInDirection(direction,playerLocation);
 		return Board.isValidLocation(p,board) && board.isWall(playerLocation, p) && !board.getWall(playerLocation, p).isBroken();
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Chop "+ direction.toString();
+	}
 }
