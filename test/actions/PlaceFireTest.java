@@ -7,6 +7,7 @@ import exeptions.BadBoardException;
 import exeptions.PoiException;
 import exeptions.WallException;
 import mecanics.ArraylistHelper;
+import mecanics.GameMaster;
 import mecanics.Reducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ public class PlaceFireTest
 	@Test
 	void actionPlaceFireTile()
 	{
+		GameMaster.getInstance().startGame(1);
 		Board afterAction = null;
 		try
 		{

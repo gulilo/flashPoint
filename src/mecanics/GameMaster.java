@@ -2,30 +2,31 @@ package mecanics;
 
 import Gui.MainPanel;
 import actions.Action;
-import actions.PlayerAction;
+import actions.PlaceFire;
+import actions.ReplenishPoi;
 import board.Board;
 import board.DoorTile;
 import exeptions.ActionException;
 import exeptions.BadBoardException;
 import exeptions.PoiException;
 import exeptions.WallException;
-import pieces.Fire;
-import pieces.HiddenPoi;
-import pieces.Human;
-import pieces.Player;
+import pieces.*;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class GameMaster
 {
+	private final Color[] playersColors = {Color.BLUE,Color.green,Color.YELLOW,Color.MAGENTA,Color.orange,Color.white};
+	
 	private static GameMaster instance;
 	private static Board board;
 	private Player[] players;
 	private int turn;
 	private ArrayList<Action> pastActions;
+	private boolean firstTurn;
 	
-	private MainPanel mainPanel; // TEMPERARy
+	private MainPanel mainPanel; // TEMPERARY
 	
 	public static GameMaster getInstance()
 	{
@@ -43,10 +44,11 @@ public class GameMaster
 	
 	public void startGame(int numberOfPlayers)
 	{
+		firstTurn = true;
 		players = new Player[numberOfPlayers];
 		for(int i = 0; i < players.length; i++)
 		{
-			players[i] = new Human(Color.BLUE);
+			players[i] = new Human(playersColors[i]);
 		}
 		initBoard();
 		turn = 0;
@@ -89,9 +91,9 @@ public class GameMaster
 		
 		try
 		{
-			board.addPiece(new Point(5,1),new HiddenPoi());
-			board.addPiece(new Point(2,4),new HiddenPoi());
-			board.addPiece(new Point(5,8),new HiddenPoi());
+			board.addPiece(new Point(5, 1), new HiddenPoi());
+			board.addPiece(new Point(2, 4), new HiddenPoi());
+			board.addPiece(new Point(5, 8), new HiddenPoi());
 		}
 		catch(PoiException e)
 		{
@@ -119,15 +121,38 @@ public class GameMaster
 		this.board = board;
 	}
 	
-	public void placeFire(Dice dice)
+	public static Board placeFire(Dice dice, Board board) throws WallException, PoiException, BadBoardException, ActionException
 	{
-		
+		//System.out.println("bla");
+		Point p = dice.getLocation();
+		//System.out.println(p);
+		//Point p = new Point(1, 1);
+		return Reducer.doAction(null, new PlaceFire(p), board);///////////////////////////FIX   ME!!!!!
 	}
 	
-	public void ReplenishPoi(Dice dice)
+	public static Board replenishPoi(Dice dice, Board board) throws ActionException, WallException, PoiException, BadBoardException
 	{
-		
+		int MAX_POI = 3;
+		int num = MAX_POI - board.numberOfPoi();
+		Point[] loc = new Point[num];
+		Poi.type[] types = new Poi.type[num];
+		for(int i = 0; i < num; i++)
+		{
+			loc[i] = dice.getLocation();
+			int r = dice.rollX(2);
+			switch(r)
+			{
+				case 1:
+					types[i] = Poi.type.falseAlarm;
+					break;
+				case 2:
+					types[i] = Poi.type.victim;
+					break;
+			}
+		}
+		return Reducer.doAction(null, new ReplenishPoi(loc, types), board);
 	}
+	
 	
 	public Player getCurrentPlayer()
 	{
@@ -139,7 +164,7 @@ public class GameMaster
 		pastActions.add(action);
 	}
 	
-	public void doAction(PlayerAction action)
+	public void doAction(Action action)
 	{
 		try
 		{
@@ -149,16 +174,19 @@ public class GameMaster
 		{
 			e.printStackTrace();
 		}
-		
-/*		for(int i = 0;i < board.getSize().x;i++)
+		/*System.out.println(action);
+		System.out.println("----------------------------------------------------------");
+		for(int i = 0; i < board.getSize().x; i++)
 		{
-			for(int j = 0;j < board.getSize().y;j++)
+			for(int j = 0; j < board.getSize().y; j++)
 			{
-				System.out.print(board.getTile(new Point(i,j)).getPieces());
+				System.out.print(board.getTile(new Point(i, j)).getPieces());
 			}
 			System.out.println();
-		}*/
+		}
+		System.out.println("----------------------------------------------------------");*/
 		mainPanel.updateComboBox();
+		mainPanel.updateActionPoints();
 		mainPanel.repaint();
 	}
 	
@@ -171,5 +199,27 @@ public class GameMaster
 	public void setMainPanel(MainPanel mainPanel)
 	{
 		this.mainPanel = mainPanel;
+	}
+	
+	public void nextTurn()
+	{
+		if(!firstTurn)
+		{
+			Player player = getCurrentPlayer();
+			if(player.getActionPoints() + 4 < 8)
+			{
+				player.addActionPoint(4);
+			}
+			else
+			{
+				player.addActionPoint(8 - player.getActionPoints());
+			}
+		}
+		turn = (turn + 1) % players.length;
+		if(firstTurn && turn == 0)
+		{
+			firstTurn = false;
+		}
+		
 	}
 }

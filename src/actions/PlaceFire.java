@@ -15,4 +15,10 @@ public class PlaceFire extends Action
 	{
 		return tile;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Place fire " + tile;
+	}
 }

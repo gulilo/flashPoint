@@ -2,9 +2,11 @@ package board;
 
 import actions.*;
 import exeptions.BadBoardException;
+import mecanics.ArraylistHelper;
 import mecanics.Direction;
 import pieces.Piece;
 import pieces.Player;
+import pieces.Poi;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,7 +52,6 @@ public class Board
 		return board;
 	}
 	
-	//TODO write getAvailableActions
 	public ArrayList<PlayerAction> getAvailableActions(Player player) throws BadBoardException
 	{
 		ArrayList<PlayerAction> ans = new ArrayList<>();
@@ -109,18 +110,24 @@ public class Board
 			{
 				ans.add(action);
 			}
+			action = new FinishTurn();
+			if(action.isAvailable(player, playerLocation, this))
+			{
+				ans.add(action);
+			}
 		}
 		else
 		{
-			for(int i = 0; i< size.x;i++)
+			for(int i = 0; i < size.x; i++)
 			{
-				ans.add(new FirstAction(new Point(0,i)));
-				ans.add(new FirstAction(new Point(size.x-1,i)));
+				ans.add(new FirstAction(new Point(i, 0)));
+				ans.add(new FirstAction(new Point(i, size.y - 1)));
 			}
-			for(int i = 0; i< size.y;i++)
+			for(int i = 0; i < size.y; i++)
 			{
-				ans.add(new FirstAction(new Point(i,0)));
-				ans.add(new FirstAction(new Point(i,size.y-1)));
+				ans.add(new FirstAction(new Point(0, i)));
+				ans.add(new FirstAction(new Point(size.x - 1, i)));
+				
 			}
 		}
 		return ans;
@@ -282,6 +289,25 @@ public class Board
 	{
 		Point p = getActualLocation(location);
 		return (Tile) board[p.x][p.y];
+	}
+	
+	public int numberOfPoi()
+	{
+		int ans = 0;
+		
+		for(int i = 0; i < size.x; i++)
+		{
+			for(int j = 0; j < size.y; j++)
+			{
+				Tile tile = getTile(new Point(i, j));
+				if(ArraylistHelper.containsInstance(tile.getPieces(), Poi.class))
+				{
+					ans++;
+				}
+			}
+		}
+		
+		return ans;
 	}
 	
 	//statics functions

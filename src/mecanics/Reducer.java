@@ -12,14 +12,12 @@ import java.util.ArrayList;
 
 public class Reducer
 {
-	
-	//TODO rewrite to use the new Board.getTileInDirection.
 	public static Board doAction(Player player, Action action, Board board) throws ActionException, BadBoardException, PoiException, WallException
 	{
 		Board newBoard = new Board(board);
 		if(action instanceof PlayerAction)
 		{
-			if(player.getActionPoints() - ((PlayerAction) action).getCost() > 0)
+			if(player.getActionPoints() - ((PlayerAction) action).getCost() >= 0)
 			{
 				Point playerLocation = Board.findPlayer(player, board);
 				if(playerLocation == null)
@@ -27,6 +25,7 @@ public class Reducer
 					if(action instanceof FirstAction)
 					{
 						doFirstAction(player, (FirstAction) action, newBoard);
+						doFinishTurnAction();
 					}
 					else
 					{
@@ -70,7 +69,14 @@ public class Reducer
 				{
 					doLeaveVictim(player, playerLocation, newBoard);
 				}
-				//player.useActionPoints(((PlayerAction) action).getCost());////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				else if(action instanceof FinishTurn)
+				{
+					Dice d = new Dice();
+					newBoard = GameMaster.placeFire(d,newBoard);
+					newBoard =GameMaster.replenishPoi(d,newBoard);
+					doFinishTurnAction();
+				}
+				player.useActionPoints(((PlayerAction) action).getCost());
 			}
 			else
 			{
@@ -90,6 +96,11 @@ public class Reducer
 		}
 		GameMaster.getInstance().addPastAction(action);
 		return newBoard;
+	}
+	
+	private static void doFinishTurnAction()
+	{
+		GameMaster.getInstance().nextTurn();
 	}
 	
 	private static void doFirstAction(Player player, FirstAction action, Board board) throws FirstActionException
@@ -135,6 +146,7 @@ public class Reducer
 				{
 					if(pieces.get(j) instanceof Smoke)
 					{
+						
 						smoke = (Smoke) pieces.get(j);
 						break;
 					}
@@ -207,6 +219,7 @@ public class Reducer
 			tile.addPiece(new Smoke());
 		}
 		doFlashOver(board);
+		//System.out.println("bbbb");
 	}
 	
 	private static void doExplosion(Point location, Board board) throws BadBoardException, WallException

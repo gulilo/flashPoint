@@ -47,7 +47,7 @@ class GameMasterTest
 		}
 		
 		Dice dice = new Dice(1234); // find the real seed later
-		gm.placeFire(dice);
+		//gm.placeFire(dice);
 		
 		//assertTrue("there suppose to be smoke in tile 2 2",((Tile)gm.getBoard().getBoard()[2][2]).getPiece() instanceof Smoke);
 		
@@ -69,7 +69,7 @@ class GameMasterTest
 			}
 		}
 		Dice dice = new Dice(1234); // find real seed later...
-		gm.ReplenishPoi(dice);
+		//gm.replenishPoi(dice);
 		//assertTrue("there suppose to be POI in tile 2 2", ((Tile)gm.getBoard().getBoard()[2][2]).getPiece() instanceof Poi);
 	}
 	

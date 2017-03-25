@@ -23,7 +23,7 @@ public class OpenCloseDoor extends PlayerAction
 			return false;
 		}
 		Point p = Board.getLocationInDirection(direction,playerLocation);
-		return Board.isValidLocation(p,board) && board.isDoor(playerLocation, p);
+		return Board.isValidLocation(Board.getActualLocation(p),board) && board.isDoor(playerLocation, p);
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class MainPanel extends JPanel
 {
 	private JComboBox<PlayerAction> availableActions;
+	private JLabel points;
 	public MainPanel(Dimension size)
 	{
 		super();
@@ -34,6 +35,11 @@ public class MainPanel extends JPanel
 		doAction.addActionListener(e -> GameMaster.getInstance().doAction((PlayerAction) availableActions.getSelectedItem()));
 		add(doAction);
 		
+		points = new JLabel("action points left: 4");
+		points.setSize(200,30);
+		points.setLocation(availableActions.getX()+ 170,availableActions.getY());
+		add(points);
+		
 	}
 	
 	public void updateComboBox()
@@ -51,5 +57,10 @@ public class MainPanel extends JPanel
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateActionPoints()
+	{
+		points.setText("action points left: "+ GameMaster.getInstance().getCurrentPlayer().getActionPoints());
 	}
 }

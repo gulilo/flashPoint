@@ -85,7 +85,8 @@ public class BoardPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		super.paintComponent(g);
 		updateBoard();
+		super.paintComponent(g);
+		System.out.println();
 	}
 }

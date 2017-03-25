@@ -23,7 +23,7 @@ public class Chop extends PlayerAction
 			return false;
 		}
 		Point p = Board.getLocationInDirection(direction,playerLocation);
-		return Board.isValidLocation(p,board) && board.isWall(playerLocation, p) && !board.getWall(playerLocation, p).isBroken();
+		return Board.isValidLocation(Board.getActualLocation(p),board) && board.isWall(playerLocation, p) && !board.getWall(playerLocation, p).isBroken();
 	}
 	
 	@Override
