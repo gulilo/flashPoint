@@ -8,7 +8,6 @@ import mecanics.GameMaster;
 import mecanics.Reducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pieces.Human;
 import pieces.Piece;
 import pieces.Player;
 import pieces.Victim;
@@ -29,10 +28,10 @@ public class carryVictimTest
 	@BeforeEach
 	void setUp()
 	{
-		GameMaster.getInstance().startGame(1);
+		GameMaster.getInstance().startGame(new String[]{"bla"}, new Color[]{Color.BLUE});
 		board = new Board(new Point(3,3));
 		
-		player = new Human(Color.BLUE);
+		player = GameMaster.getInstance().getCurrentPlayer();
 		board.addPiece(new Point(1,1),player);
 		action = new CarryVictim();
 	}

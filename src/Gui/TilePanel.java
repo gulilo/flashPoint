@@ -79,7 +79,7 @@ public class TilePanel extends JPanel
 			}
 			else
 			{
-				g.setColor(Color.MAGENTA);
+				g.setColor(Color.DARK_GRAY);
 			}
 			g.fillRect((3 * TILE_SIZE.width) / 4 - size.width / 2, TILE_SIZE.height / 4 - size.height / 2, size.width, size.height);
 		}

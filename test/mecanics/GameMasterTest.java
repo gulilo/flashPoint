@@ -24,7 +24,7 @@ class GameMasterTest
 	void startGameTest()
 	{
 		GameMaster gm = GameMaster.getInstance();
-		gm.startGame(3);//start game with 3 players
+		//gm.startGame(names, 3);//start game with 3 players
 		
 		//assertEquals("board tiles not equals to the init state", initBoard , gm.getBoard().getBoard());
 		assertEquals("there suppose to be 3 players", 3 ,gm.getPlayers().length);

@@ -8,14 +8,16 @@ public abstract class Player extends Piece
 {
 	public static final int MAX_ACTION_POINTS = 8;
 	private Color color;
+	private String name;
 	
 	private int actionPoints;
 	private boolean carryVictim;
 	
-	public Player(Color color)
+	public Player(String name, Color color)
 	{
 		actionPoints = 4;
 		this.color = color;
+		this.name = name;
 	}
 	
 	public int getActionPoints()
@@ -59,4 +61,10 @@ public abstract class Player extends Piece
 	{
 		return color;
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 }
+

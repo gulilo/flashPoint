@@ -29,7 +29,7 @@ public class MoveToFireTest
 	void setUp()
 	{
 		board = new Board(new Point(3,3));
-		player = new Human(Color.BLUE);
+		player = new Human("bla", Color.BLUE);
 		board.addPiece(new Point(1,1),player);
 		action = new MoveToFire(Direction.up);
 	}

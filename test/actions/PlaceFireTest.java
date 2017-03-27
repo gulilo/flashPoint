@@ -35,7 +35,7 @@ public class PlaceFireTest
 	@Test
 	void actionPlaceFireTile()
 	{
-		GameMaster.getInstance().startGame(1);
+		GameMaster.getInstance().startGame(new String[]{"bla"}, new Color[]{Color.BLUE});
 		Board afterAction = null;
 		try
 		{
@@ -108,7 +108,7 @@ public class PlaceFireTest
 		Fire fire = new Fire();
 		board.addPiece(new Point(2, 2), fire);
 		Smoke smoke = new Smoke();
-		Human human = new Human(Color.BLUE);
+		Human human = new Human("bla", Color.BLUE);
 		Victim victim = new Victim();
 		WallTile wall = null;
 		try

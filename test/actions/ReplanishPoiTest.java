@@ -70,9 +70,9 @@ public class ReplanishPoiTest
 	@Test
 	void actionPlacePoiOnPlayer()
 	{
-		Human human = new Human(Color.BLUE);
+		Human human = new Human("bla", Color.BLUE);
 		board.addPiece(new Point(1,1),human);
-		Human human2 = new Human(Color.BLUE);
+		Human human2 = new Human("bla", Color.BLUE);
 		board.addPiece(new Point(2,1),human2);
 		Board afterAction = null;
 		try

@@ -1,30 +1,38 @@
 package Gui;
 
-import mecanics.GameMaster;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame
 {
-	private final Dimension DEFAULT_SIZE = new Dimension(1050, 1000);
-	private final Point DEFAULT_LOCATION = new Point(100, 100);
+	private boolean open;
 	
-	public Window()
+	public Window(Point location, Dimension size)
 	{
-		super("flush point");
+		super("flash point");
 		setResizable(false);
 		setUndecorated(false);
 		setLayout(null);
-		setLocation(DEFAULT_LOCATION);
-		setSize(DEFAULT_SIZE);
+		setLocation(location);
+		setSize(size);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
-		MainPanel panel = new MainPanel(getSize());
-		setContentPane(panel);
-		GameMaster.getInstance().setMainPanel(panel);
+	}
+	
+	public void open()
+	{
+		open = true;
 		setVisible(true);
 	}
 	
+	public void close()
+	{
+		open = false;
+		setVisible(false);
+		dispose();
+	}
+	
+	public boolean isOpen()
+	{
+		return open;
+	}
 }

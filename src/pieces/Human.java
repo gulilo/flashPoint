@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Human extends Player
 {
-	public Human(Color color)
+	public Human(String name, Color color)
 	{
-		super(color);
+		super(name, color);
 	}
 }

@@ -1,6 +1,5 @@
 package mecanics;
 
-import Gui.MainPanel;
 import actions.Action;
 import actions.PlaceFire;
 import actions.ReplenishPoi;
@@ -26,8 +25,6 @@ public class GameMaster
 	private ArrayList<Action> pastActions;
 	private boolean firstTurn;
 	
-	private MainPanel mainPanel; // TEMPERARY
-	
 	public static GameMaster getInstance()
 	{
 		if(instance == null)
@@ -42,13 +39,13 @@ public class GameMaster
 		return board;
 	}
 	
-	public void startGame(int numberOfPlayers)
+	public void startGame(String[] names, Color[] colors)
 	{
 		firstTurn = true;
-		players = new Player[numberOfPlayers];
+		players = new Player[colors.length];
 		for(int i = 0; i < players.length; i++)
 		{
-			players[i] = new Human(playersColors[i]);
+			players[i] = new Human(names[i], colors[i]);
 		}
 		initBoard();
 		turn = 0;
@@ -185,20 +182,7 @@ public class GameMaster
 			System.out.println();
 		}
 		System.out.println("----------------------------------------------------------");*/
-		mainPanel.updateComboBox();
-		mainPanel.updateActionPoints();
-		mainPanel.repaint();
-	}
-	
-	public void updateList()
-	{
-		mainPanel.updateComboBox();
-	}
-	
-	//TEMPORARY
-	public void setMainPanel(MainPanel mainPanel)
-	{
-		this.mainPanel = mainPanel;
+		GuiMaster.getInstance().updateGamePanel();
 	}
 	
 	public void nextTurn()

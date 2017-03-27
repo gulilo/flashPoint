@@ -40,9 +40,45 @@ public class MainPanel extends JPanel
 		points.setLocation(availableActions.getX()+ 170,availableActions.getY());
 		add(points);
 		
+		IndexPanel index = new IndexPanel(new Point(size.width-500,size.height-170),new Dimension(500,170));
+		add(index);
+		/*JPanel index = new JPanel();
+		index.setSize(200,170);
+		index.setLocation(size.width-200,size.height-170);
+		index.setLayout(null);
+		add(index);*/
+		//initIndex(index);
 	}
 	
-	public void updateComboBox()
+	private void initIndex(JPanel index)
+	{
+		JLabel l = new JLabel("Index");
+		l.setLocation(index.getSize().width/2 - 30,10);
+		l.setSize(60,20);
+		index.add(l);
+		JLabel wall = new JLabel("Wall");
+		wall.setLocation(10,40);
+		wall.setSize(60,20);
+		index.add(wall);
+		JLabel door = new JLabel("Door");
+		door.setLocation(10,90);
+		door.setSize(60,20);
+		index.add(door);
+		JLabel dmgWall = new JLabel("Dmg wall");
+		dmgWall.setLocation(50,40);
+		dmgWall.setSize(60,20);
+		index.add(dmgWall);
+		JLabel brkWall = new JLabel("Brk wall");
+		brkWall.setLocation(120,40);
+		brkWall.setSize(60,20);
+		index.add(brkWall);
+		
+		Graphics g = getGraphics();
+		g.setColor(WallPanel.FIX_COLOR);
+		g.fillRect(30,10,10,10);
+	}
+	
+	private void updateComboBox()
 	{
 		availableActions.setModel(new DefaultComboBoxModel<>());
 		try
@@ -59,8 +95,15 @@ public class MainPanel extends JPanel
 		}
 	}
 	
-	public void updateActionPoints()
+	private void updateActionPoints()
 	{
 		points.setText("action points left: "+ GameMaster.getInstance().getCurrentPlayer().getActionPoints());
+	}
+	
+	public void updatePanel()
+	{
+		updateComboBox();
+		updateActionPoints();
+		repaint();
 	}
 }

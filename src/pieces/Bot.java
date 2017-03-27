@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class Bot extends Player
 {
-	public Bot(Color color)
+	public Bot(String name, Color color)
 	{
-		super(color);
+		super(name, color);
 	}
 }
