@@ -31,4 +31,10 @@ public class CarryVictim extends PlayerAction
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		return "Carry victim   cost:" + cost;
+	}
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Tile extends AbstractTile
 {
-	private ArrayList<Piece> pieces;
+	protected ArrayList<Piece> pieces;
 	
 	public Tile()
 	{

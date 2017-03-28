@@ -49,7 +49,6 @@ public class carryVictimTest
 		catch(ActionException | BadBoardException | PoiException | WallException e)
 		{
 			e.printStackTrace();
-			System.out.println("bla");
 			fail();
 		}
 		

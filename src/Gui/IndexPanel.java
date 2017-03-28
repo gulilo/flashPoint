@@ -61,6 +61,12 @@ public class IndexPanel extends JPanel
 		victim.setLocation(300,90);
 		victim.setSize(80,20);
 		add(victim);
+		
+		
+		JLabel amnu = new JLabel("ambulance Tile");
+		amnu.setLocation(390,40);
+		amnu.setSize(120,20);
+		add(amnu);
 	}
 	
 	@Override
@@ -94,5 +100,8 @@ public class IndexPanel extends JPanel
 		g.fillRect(300,65,20,20);
 		g.setColor(Color.DARK_GRAY);
 		g.fillRect(300,115,20,20);
+		
+		g.setColor(TilePanel.AMBULANCE_COLOR);
+		g.fillRect(420,65,30,30);
 	}
 }

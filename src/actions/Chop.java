@@ -29,6 +29,6 @@ public class Chop extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "Chop "+ direction.toString();
+		return "Chop "+ direction.toString()+"   cost:" + cost;
 	}
 }

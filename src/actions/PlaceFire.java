@@ -19,6 +19,6 @@ public class PlaceFire extends Action
 	@Override
 	public String toString()
 	{
-		return "Place fire " + tile;
+		return "Place fire   tile:(" + tile.x + ", "+ tile.y+")";
 	}
 }

@@ -2,6 +2,7 @@ package mecanics;
 
 import actions.Action;
 import actions.PlaceFire;
+import actions.PlayerAction;
 import actions.ReplenishPoi;
 import board.Board;
 import board.DoorTile;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 public class GameMaster
 {
-	private final Color[] playersColors = {Color.BLUE,Color.green,Color.YELLOW,Color.MAGENTA,Color.orange,Color.white};
+	private final Color[] playersColors = {Color.BLUE, Color.green, Color.YELLOW, Color.MAGENTA, Color.orange, Color.white};
 	
 	private static GameMaster instance;
 	private static Board board;
@@ -24,6 +25,10 @@ public class GameMaster
 	private int turn;
 	private ArrayList<Action> pastActions;
 	private boolean firstTurn;
+	private boolean finish;
+	private boolean gameOver;
+	private Thread runner;
+	
 	
 	public static GameMaster getInstance()
 	{
@@ -50,6 +55,10 @@ public class GameMaster
 		initBoard();
 		turn = 0;
 		pastActions = new ArrayList<>();
+		runner = new GameRun();
+		runner.start();
+		finish = false;
+		gameOver = false;
 		
 	}
 	
@@ -96,6 +105,10 @@ public class GameMaster
 		{
 			e.printStackTrace();
 		}
+		board.setAmbulance(new Point(1, 0));
+		board.setAmbulance(new Point(2, 0));
+		board.setAmbulance(new Point(5, 9));
+		board.setAmbulance(new Point(6, 9));
 	}
 	
 	public Player[] getPlayers()
@@ -118,16 +131,15 @@ public class GameMaster
 		this.board = board;
 	}
 	
-	public static Board placeFire(Dice dice, Board board) throws WallException, PoiException, BadBoardException, ActionException
+	private static Board placeFire(Dice dice, Board board) throws WallException, PoiException, BadBoardException, ActionException
 	{
-		//System.out.println("bla");
 		Point p = dice.getLocation();
-		//System.out.println(p);
-		//Point p = new Point(1, 1);
-		return Reducer.doAction(null, new PlaceFire(p), board);///////////////////////////FIX   ME!!!!!
+		PlaceFire action = new PlaceFire(p);
+		GuiMaster.getInstance().log(action.toString());
+		return Reducer.doAction(null, action, board);
 	}
 	
-	public static Board replenishPoi(Dice dice, Board board) throws ActionException, WallException, PoiException, BadBoardException
+	private static Board replenishPoi(Dice dice, Board board) throws ActionException, WallException, PoiException, BadBoardException
 	{
 		int MAX_POI = 3;
 		int num = MAX_POI - board.numberOfPoi();
@@ -136,20 +148,21 @@ public class GameMaster
 		for(int i = 0; i < num; i++)
 		{
 			loc[i] = dice.getLocation();
-			int r = dice.rollX(2);
-			switch(r)
+			int r = dice.rollX(Poi.NUMBER_OF_VICTIM-Poi.USED_VICTIM + Poi.NUMBER_OF_FALSE_ALARM - Poi.USED_FALSE_ALARM);
+			if(r > Poi.NUMBER_OF_VICTIM - Poi.USED_VICTIM)
 			{
-				case 1:
-					types[i] = Poi.type.falseAlarm;
-					break;
-				case 2:
-					types[i] = Poi.type.victim;
-					break;
+				types[i] = Poi.type.victim;
+			}
+			else
+			{
+				types[i] = Poi.type.falseAlarm;
+				
 			}
 		}
-		return Reducer.doAction(null, new ReplenishPoi(loc, types), board);
+		ReplenishPoi action = new ReplenishPoi(loc,types);
+		GuiMaster.getInstance().log(action.toString());
+		return Reducer.doAction(null, action, board);
 	}
-	
 	
 	public Player getCurrentPlayer()
 	{
@@ -171,21 +184,22 @@ public class GameMaster
 		{
 			e.printStackTrace();
 		}
-		/*System.out.println(action);
-		System.out.println("----------------------------------------------------------");
-		for(int i = 0; i < board.getSize().x; i++)
+		
+		if(board.isGameOver())
 		{
-			for(int j = 0; j < board.getSize().y; j++)
-			{
-				System.out.print(board.getTile(new Point(i, j)).getPieces());
-			}
-			System.out.println();
+			gameOver();
 		}
-		System.out.println("----------------------------------------------------------");*/
-		GuiMaster.getInstance().updateGamePanel();
+		try
+		{
+			setPlayerAction(null);
+		}
+		catch(Exception ignored)
+		{
+		
+		}
 	}
 	
-	public void nextTurn()
+	private void nextTurn()
 	{
 		if(!firstTurn)
 		{
@@ -199,11 +213,108 @@ public class GameMaster
 				player.addActionPoint(8 - player.getActionPoints());
 			}
 		}
+		
 		turn = (turn + 1) % players.length;
 		if(firstTurn && turn == 0)
 		{
 			firstTurn = false;
 		}
+	}
+	
+	private void gameOver()
+	{
+		gameOver = true;
+	}
+	
+	public void finishTurn()
+	{
+		finish = true;
+	}
+	
+	public void setPlayerAction(PlayerAction action) throws Exception
+	{
+		if(!(getCurrentPlayer() instanceof Human))
+		{
+			throw new Exception("not human");
+		}
+		((Human) getCurrentPlayer()).setAction(action);
+		synchronized(runner)
+		{
+			runner.notify();
+		}
+	}
+	
+	public int getRescues()
+	{
+		return board.getRescued();
+	}
+	
+	public int getKilled()
+	{
+		return board.getDeads();
+	}
+	
+	public int wallDmg()
+	{
+		return board.numberOfWallDamage();
+	}
+	
+	private class GameRun extends Thread
+	{
 		
+		@Override
+		public void run()
+		{
+			while(!gameOver)
+			{
+				
+				while(getCurrentPlayer().getAction() == null)
+				{
+					synchronized(this)
+					{
+						try
+						{
+							this.wait();
+						}
+						catch(InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
+				}
+				GuiMaster.getInstance().log("    "+getCurrentPlayer().getName()+" turn");
+				Action action = getCurrentPlayer().getAction();
+				doAction(action);
+				GuiMaster.getInstance().log(action.toString());
+				if(finish)
+				{
+					if(!firstTurn)
+					{
+						Dice d = new Dice();
+						try
+						{
+							board = placeFire(d, board);
+							if(gameOver)
+							{
+								continue;
+							}
+							board = replenishPoi(d, board);
+							if(gameOver)
+							{
+								continue;
+							}
+						}
+						catch(WallException | PoiException | BadBoardException | ActionException e)
+						{
+							e.printStackTrace();
+						}
+					}
+					nextTurn();
+				}
+				GuiMaster.getInstance().updateGamePanel();
+				finish = false;
+			}
+		}
 	}
 }
+

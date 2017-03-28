@@ -29,6 +29,6 @@ public class OpenCloseDoor extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "OpenCloseDoor "+direction.toString();
+		return "Open / close door "+direction.toString() + "   cost "+cost;
 	}
 }

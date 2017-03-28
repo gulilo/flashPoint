@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class GuiMaster
 {
-	private final Dimension DEFAULT_SIZE = new Dimension(1050, 1000);
+	private final Dimension DEFAULT_SIZE = new Dimension(1300, 1000);
 	private final Point DEFAULT_LOCATION = new Point(100, 100);
 	
 	private static GuiMaster instance;
@@ -60,5 +60,10 @@ public class GuiMaster
 	public void updateGamePanel()
 	{
 		mainPanel.updatePanel();
+	}
+	
+	public void log(String s)
+	{
+		mainPanel.log(s);
 	}
 }

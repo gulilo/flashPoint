@@ -75,7 +75,7 @@ public class BoardPanel extends JPanel
 						e.printStackTrace();
 					}
 				}
-				add(new TilePanel(tileLocation, board.getTile(new Point(i, j))));
+				add(new TilePanel(tileLocation, board.getTile(new Point(i, j)),i,j));
 				tileLocation = new Point(tileLocation.x + TILE_SIZE.width, tileLocation.y);
 			}
 			tileLocation = new Point(0, tileLocation.y + TILE_SIZE.height);
@@ -87,6 +87,5 @@ public class BoardPanel extends JPanel
 	{
 		updateBoard();
 		super.paintComponent(g);
-		System.out.println();
 	}
 }

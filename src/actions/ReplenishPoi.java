@@ -38,4 +38,15 @@ public class ReplenishPoi extends Action
 	{
 		return types;
 	}
+	
+	@Override
+	public String toString()
+	{
+		String s ="Replenish poi   " + "tiles: (";
+		for(int i = 0 ; i< tiles.length;i++)
+		{
+			s+= tiles[i].x+", "+tiles[i].y;
+		}
+		return s+")";
+	}
 }

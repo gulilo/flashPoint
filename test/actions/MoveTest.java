@@ -261,8 +261,6 @@ public class MoveTest
 			fail();
 		}
 		
-		System.out.println(((Tile) board.getTile(new Point(0, 1))).getPieces());
-		System.out.println(((Tile) afterAction.getTile(new Point(0, 1))).getPieces());
 		ArrayList<ArrayList<Piece>> change = ArraylistHelper.changes(((Tile) board.getTile(new Point(0, 1))).getPieces(), ((Tile) afterAction.getTile(new Point(0, 1))).getPieces());
 		ArrayList<Piece> added = change.get(0);
 		ArrayList<Piece> removed = change.get(1);

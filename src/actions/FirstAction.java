@@ -32,6 +32,6 @@ public class FirstAction extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "FirstAction " + tile.x +" , "+tile.y ;
+		return "place Player " + tile.x +" , "+tile.y ;
 	}
 }

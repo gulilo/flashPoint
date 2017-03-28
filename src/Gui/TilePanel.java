@@ -1,5 +1,6 @@
 package Gui;
 
+import board.AmbulanceTile;
 import board.Tile;
 import pieces.*;
 
@@ -9,11 +10,14 @@ import java.util.ArrayList;
 
 public class TilePanel extends JPanel
 {
+	public static final Color AMBULANCE_COLOR = new Color(255,170,200);
+	
 	public static final Dimension TILE_SIZE = new Dimension(100, 100);
 	private Tile tile;
 	private Point playerLoc = null;
+	private int i,j;
 	
-	public TilePanel(Point location, Tile tile)
+	public TilePanel(Point location, Tile tile,int i, int j)
 	{
 		super();
 		setLayout(null);
@@ -22,20 +26,23 @@ public class TilePanel extends JPanel
 		//setBackground(new Color(255,130,40));
 		//setBackground(Color.GRAY);
 		this.tile = tile;
+		this.i = i;
+		this.j = j;
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		g.setColor(new Color(255, 130, 40));
+		g.setColor((tile instanceof AmbulanceTile)?AMBULANCE_COLOR :new Color(255, 130, 40));
 		g.fillRect(2, 2, getWidth() - 3, getHeight() - 3);
 		ArrayList<Piece> pieces = tile.getPieces();
-		//System.out.println(pieces);
 		for(Piece piece : pieces)
 		{
 			paintPiece(piece, g);
 		}
+		g.setColor(Color.black);
+		g.drawString(i+","+j,TILE_SIZE.width/2,TILE_SIZE.height/2);
 	}
 	
 	private void paintPiece(Piece piece, Graphics g)

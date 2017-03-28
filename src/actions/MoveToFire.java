@@ -28,6 +28,6 @@ public class MoveToFire extends Move
 	@Override
 	public String toString()
 	{
-		return "MoveToFire " +direction.toString();
+		return "Move " +direction.toString()+ "    cost "+cost;
 	}
 }

@@ -37,6 +37,6 @@ public class Extinguish extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "Extinguish "+ direction.toString();
+		return "Extinguish "+ direction.toString()+"   cost:" + cost;
 	}
 }

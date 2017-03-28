@@ -1,5 +1,7 @@
 package board;
 
+import java.util.ArrayList;
+
 public class AmbulanceTile extends Tile
 {
 	public AmbulanceTile()
@@ -18,7 +20,9 @@ public class AmbulanceTile extends Tile
     @Override
 	public AbstractTile copy()
 	{
-		return new AmbulanceTile();
+		Tile t = new Tile();
+		t.pieces = new ArrayList<>(pieces);
+		return t;
 	}
 	
 	@Override

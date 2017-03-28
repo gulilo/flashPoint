@@ -28,6 +28,6 @@ public class Move extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "Move "+ direction.toString();
+		return "Move "+ direction.toString() + "  cost:"+cost ;
 	}
 }

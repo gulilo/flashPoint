@@ -19,7 +19,8 @@ public class Reducer
 		{
 			if(player.getActionPoints() - ((PlayerAction) action).getCost() >= 0)
 			{
-				Point playerLocation = Board.findPlayer(player, board);
+				Point playerLocation = Board.findPlayer(player, newBoard);
+				
 				if(playerLocation == null)
 				{
 					if(action instanceof FirstAction)
@@ -71,9 +72,6 @@ public class Reducer
 				}
 				else if(action instanceof FinishTurn)
 				{
-					Dice d = new Dice();
-					newBoard = GameMaster.placeFire(d,newBoard);
-					newBoard =GameMaster.replenishPoi(d,newBoard);
 					doFinishTurnAction();
 				}
 				player.useActionPoints(((PlayerAction) action).getCost());
@@ -100,7 +98,7 @@ public class Reducer
 	
 	private static void doFinishTurnAction()
 	{
-		GameMaster.getInstance().nextTurn();
+		GameMaster.getInstance().finishTurn();
 	}
 	
 	private static void doFirstAction(Player player, FirstAction action, Board board) throws FirstActionException
@@ -113,6 +111,7 @@ public class Reducer
 		board.addPiece(loc,player);
 	}
 	
+	//TODO victim carried count for poi on the board.....
 	private static void doReplenishPoi(ReplenishPoi action, Board board) throws ReplenishPoiException, PoiException
 	{
 		Point[] locations = action.getTiles();
@@ -219,7 +218,6 @@ public class Reducer
 			tile.addPiece(new Smoke());
 		}
 		doFlashOver(board);
-		//System.out.println("bbbb");
 	}
 	
 	private static void doExplosion(Point location, Board board) throws BadBoardException, WallException
@@ -340,6 +338,11 @@ public class Reducer
 		if(ArraylistHelper.containsInstance(tile.getPieces(),Fire.class))
 		{
 			throw new MoveWithVictimException("cant move to fire with victim");
+		}
+		if(newLocation.x == 0 || newLocation.x == board.getSize().x-1 || newLocation.y == 0 || newLocation.y == board.getSize().y-1)
+		{
+			board.rescue();
+			player.stopCarryVictim();
 		}
 		doMoveAction(player,direction,playerLocation,board);
 	}

@@ -9,18 +9,17 @@ import java.awt.event.ActionListener;
 
 public class ChoosePlayersPanel extends JPanel
 {
-	private final Dimension BUTTON_HOLDER_SIZE = new Dimension(200,400);
+	private final Dimension BUTTON_HOLDER_SIZE = new Dimension(200, 400);
 	
 	private static final int MAX_PLAYERS = 6;
 	private final Color[] playersColors = {Color.BLUE, Color.green, Color.YELLOW, Color.MAGENTA, Color.orange, Color.white};
-	private final String[] colorNames = {"Blue", "Green", "Yellow","Pink", "Orange", "White"};
+	private final String[] colorNames = {"Blue", "Green", "Yellow", "Pink", "Orange", "White"};
 	
 	private int numOfPlayers;
 	
 	private JPanel players;
-	private JButton addPlayerButton;
-	private JComboBox<String>[] colorsboxes;
-	private JTextField[] namesFields;
+	private JPanel playersButtonPanel;
+	private PlayerPanel[] playerPanels;
 	
 	public ChoosePlayersPanel(Dimension size)
 	{
@@ -30,16 +29,21 @@ public class ChoosePlayersPanel extends JPanel
 		setLayout(null);
 		setBackground(Color.gray);
 		
-		colorsboxes = new JComboBox[6];
-		namesFields = new JTextField[6];
+		playerPanels = new PlayerPanel[6];
 		
 		players = new JPanel();
 		players.setSize(800, 500);
 		players.setLocation(20, 20);
 		players.setLayout(null);
-		addPlayerButton = new JButton("Add Player");
+		
+		playersButtonPanel = new JPanel();
+		playersButtonPanel.setLocation(30, 70);
+		playersButtonPanel.setSize(250, 30);
+		players.add(playersButtonPanel);
+		
+		JButton addPlayerButton = new JButton("Add player");
 		addPlayerButton.setSize(100, 30);
-		addPlayerButton.setLocation(30, 70);
+		addPlayerButton.setLocation(0, 0);
 		addPlayerButton.setFocusable(false);
 		addPlayerButton.addActionListener(new ActionListener()
 		{
@@ -49,12 +53,26 @@ public class ChoosePlayersPanel extends JPanel
 				addPlayer();
 			}
 		});
-		players.add(addPlayerButton);
+		playersButtonPanel.add(addPlayerButton);
 		addPlayer();
+		
+		JButton removePlayerButton = new JButton("Remove Player");
+		removePlayerButton.setSize(100, 30);
+		removePlayerButton.setLocation(150, 0);
+		removePlayerButton.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				removePlayer();
+			}
+		});
+		playersButtonPanel.add(removePlayerButton);
+		
 		JPanel buttons = new JPanel();
 		buttons.setSize(BUTTON_HOLDER_SIZE);
-		buttons.setLocation(size.width-BUTTON_HOLDER_SIZE.width,size.height-BUTTON_HOLDER_SIZE.height);
-		buttons.setLayout(new GridLayout(0,1,0,50));
+		buttons.setLocation(size.width - BUTTON_HOLDER_SIZE.width, size.height - BUTTON_HOLDER_SIZE.height);
+		buttons.setLayout(new GridLayout(0, 1, 0, 50));
 		add(buttons);
 		JButton start = new JButton("Start");
 		start.addActionListener(new ActionListener()
@@ -65,10 +83,10 @@ public class ChoosePlayersPanel extends JPanel
 				String[] names = new String[numOfPlayers];
 				Color[] colors = new Color[numOfPlayers];
 				
-				for(int i = 0;i < numOfPlayers;i++)
+				for(int i = 0; i < numOfPlayers; i++)
 				{
-					names[i] = namesFields[i].getText();
-					colors[i] = getColor((String) colorsboxes[i].getSelectedItem());
+					names[i] = playerPanels[i].getText();
+					colors[i] = playerPanels[i].getColor();
 				}
 				GuiMaster.getInstance().startGame(names, colors);
 			}
@@ -90,51 +108,86 @@ public class ChoosePlayersPanel extends JPanel
 	
 	private void addPlayer()
 	{
-		Point loc = addPlayerButton.getLocation();
-		
-		//name section
-		JLabel nameLabel = new JLabel("Name");
-		nameLabel.setLocation(30, loc.y);
-		nameLabel.setSize(50, 20);
-		players.add(nameLabel);
-		namesFields[numOfPlayers] = new JTextField();
-		namesFields[numOfPlayers].setSize(100, 20);
-		namesFields[numOfPlayers].setLocation(80, loc.y);
-		players.add(namesFields[numOfPlayers]);
-		
-		//color section
-		JLabel colorLabel = new JLabel("Color");
-		colorLabel.setLocation(220, loc.y);
-		colorLabel.setSize(500, 20);
-		players.add(colorLabel);
-		colorsboxes[numOfPlayers] = new JComboBox<>(colorNames);
-		colorsboxes[numOfPlayers].setLocation(260, loc.y);
-		colorsboxes[numOfPlayers].setSize(100, 20);
-		players.add(colorsboxes[numOfPlayers]);
+		Point loc = playersButtonPanel.getLocation();
+		playerPanels[numOfPlayers] = new PlayerPanel(loc);
+		players.add(playerPanels[numOfPlayers]);
 		
 		numOfPlayers++;
 		if(numOfPlayers < MAX_PLAYERS)
 		{
-			addPlayerButton.setLocation(loc.x, loc.y + 30);
+			playersButtonPanel.setLocation(loc.x, loc.y + 30);
 		}
 		else
 		{
-			addPlayerButton.setVisible(false);
+			playersButtonPanel.setVisible(false);
 		}
 		players.revalidate();
 		players.repaint();
 	}
 	
-	private Color getColor(String color)
+	private void removePlayer()//TODO the remove is also gone
 	{
-		Color c;
-		for(int i = 0; i < colorNames.length;i++)
+		Point loc = playersButtonPanel.getLocation();
+		
+		numOfPlayers--;
+		players.remove(playerPanels[numOfPlayers]);
+		playerPanels[numOfPlayers] = null;
+		
+		playersButtonPanel.setLocation(loc.x, loc.y - 30);
+		players.revalidate();
+		players.repaint();
+	}
+	
+	
+	private class PlayerPanel extends JPanel
+	{
+		private JComboBox<String> colorBox;
+		private JTextField nameField;
+		
+		public PlayerPanel(Point location)
 		{
-			if(color.equals(colorNames[i]))
-			{
-				return playersColors[i];
-			}
+			super();
+			setSize(600, 20);
+			setLocation(location);
+			setLayout(null);
+			setBackground(Color.YELLOW);
+			
+			//name section
+			JLabel nameLabel = new JLabel("Name");
+			nameLabel.setLocation(0, 0);
+			nameLabel.setSize(50, 20);
+			add(nameLabel);
+			nameField = new JTextField();
+			nameField.setSize(100, 20);
+			nameField.setLocation(50, 0);
+			add(nameField);
+			
+			//color section
+			JLabel colorLabel = new JLabel("Color");
+			colorLabel.setLocation(200, 0);
+			colorLabel.setSize(500, 20);
+			add(colorLabel);
+			colorBox = new JComboBox<>(colorNames);
+			colorBox.setLocation(240, 0);
+			colorBox.setSize(100, 20);
+			add(colorBox);
 		}
-		return null;//will never happen
+		
+		private Color getColor()
+		{
+			for(int i = 0; i < colorNames.length; i++)
+			{
+				if(colorBox.getSelectedItem().equals(colorNames[i]))
+				{
+					return playersColors[i];
+				}
+			}
+			return null;//will never happen
+		}
+		
+		public String getText()
+		{
+			return nameField.getText();
+		}
 	}
 }

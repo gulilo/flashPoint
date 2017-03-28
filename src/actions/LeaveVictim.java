@@ -33,6 +33,6 @@ public class LeaveVictim extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "LeaveVictim";
+		return "Leave victim   cost:" + cost;
 	}
 }

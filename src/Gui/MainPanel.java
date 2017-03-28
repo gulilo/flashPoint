@@ -12,6 +12,11 @@ public class MainPanel extends JPanel
 {
 	private JComboBox<PlayerAction> availableActions;
 	private JLabel points;
+	private JLabel turn;
+	private JTextArea log;
+	private JLabel rescues,killed;
+	private JLabel wallDmg;
+	
 	public MainPanel(Dimension size)
 	{
 		super();
@@ -19,7 +24,7 @@ public class MainPanel extends JPanel
 		setLayout(null);
 		setLocation(0, 0);
 		setSize(size);
-		setBackground(Color.red);
+		setBackground(Color.gray);
 		Dimension boardSize = new Dimension(TilePanel.TILE_SIZE.width* GameMaster.getInstance().getBoard().getSize().y, TilePanel.TILE_SIZE.height * GameMaster.getInstance().getBoard().getSize().x);
 		add(new BoardPanel(new Point(10, 10), boardSize));
 		
@@ -32,7 +37,17 @@ public class MainPanel extends JPanel
 		JButton doAction = new JButton("do action");
 		doAction.setSize(150,70);
 		doAction.setLocation(50,boardSize.height+70);
-		doAction.addActionListener(e -> GameMaster.getInstance().doAction((PlayerAction) availableActions.getSelectedItem()));
+		doAction.addActionListener(e ->
+		                           {
+			                           try
+			                           {
+				                           GameMaster.getInstance().setPlayerAction((PlayerAction) availableActions.getSelectedItem());
+			                           }
+			                           catch(Exception e1)
+			                           {
+				                           e1.printStackTrace();
+			                           }
+		                           });
 		add(doAction);
 		
 		points = new JLabel("action points left: 4");
@@ -42,12 +57,33 @@ public class MainPanel extends JPanel
 		
 		IndexPanel index = new IndexPanel(new Point(size.width-500,size.height-170),new Dimension(500,170));
 		add(index);
-		/*JPanel index = new JPanel();
-		index.setSize(200,170);
-		index.setLocation(size.width-200,size.height-170);
-		index.setLayout(null);
-		add(index);*/
-		//initIndex(index);
+
+		turn = new JLabel(GameMaster.getInstance().getCurrentPlayer().getName()+ " turn");
+		turn.setLocation(points.getX(),points.getY()+50);
+		turn.setSize(200,30);
+		add(turn);
+		
+		log = new JTextArea();
+		log.setLocation(boardSize.width+30, 10);
+		log.setSize(size.width - log.getX()-10,800);
+		log.setEditable(false);
+		log.setFocusable(false);
+		add(log);
+		
+		rescues = new JLabel("rescued:  0");
+		rescues.setSize(100,20);
+		rescues.setLocation(turn.getX() + 150,turn.getY());
+		add(rescues);
+		
+		killed = new JLabel("killed:  0");
+		killed.setSize(100,20);
+		killed.setLocation(points.getX()+150,points.getY());
+		add(killed);
+		
+		wallDmg = new JLabel("wall damage:  0");
+		wallDmg.setSize(150,20);
+		wallDmg.setLocation(rescues.getX(),rescues.getY()+50);
+		add(wallDmg);
 	}
 	
 	private void initIndex(JPanel index)
@@ -104,6 +140,15 @@ public class MainPanel extends JPanel
 	{
 		updateComboBox();
 		updateActionPoints();
+		turn.setText(GameMaster.getInstance().getCurrentPlayer().getName() + " turn");
+		rescues.setText("rescued:  "+GameMaster.getInstance().getRescues());
+		killed.setText("killed:  "+GameMaster.getInstance().getKilled());
+		wallDmg.setText("wall damage:  "+GameMaster.getInstance().wallDmg());
 		repaint();
+	}
+	
+	public void log(String s)
+	{
+		log.setText(log.getText()+"\n" + s);
 	}
 }

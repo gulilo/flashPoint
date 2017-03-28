@@ -28,6 +28,6 @@ public class MoveWithVictim extends Move
 	@Override
 	public String toString()
 	{
-		return "MoveWithVictim "+direction.toString();
+		return "Move "+direction.toString() + "   cost "+cost;
 	}
 }

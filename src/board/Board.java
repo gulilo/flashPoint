@@ -10,7 +10,6 @@ import pieces.Poi;
 
 import java.awt.*;
 import java.util.ArrayList;
-
 public class Board
 {
 	public static final int BOARD_WIDTH = 8;
@@ -18,6 +17,9 @@ public class Board
 	
 	private Point size;
 	private AbstractTile[][] board;
+	
+	private int deads;
+	private int rescued;
 	
 	public Board(Point size)
 	{
@@ -52,6 +54,7 @@ public class Board
 		return board;
 	}
 	
+	//TODO move with victim show move too
 	public ArrayList<PlayerAction> getAvailableActions(Player player) throws BadBoardException
 	{
 		ArrayList<PlayerAction> ans = new ArrayList<>();
@@ -64,10 +67,12 @@ public class Board
 				action = new Move(d);
 				if(d != Direction.stay)
 				{
+					
 					if(action.isAvailable(player, playerLocation, this))
 					{
 						ans.add(action);
 					}
+					
 					action = new MoveToFire(d);
 					if(action.isAvailable(player, playerLocation, this))
 					{
@@ -127,7 +132,6 @@ public class Board
 			{
 				ans.add(new FirstAction(new Point(0, i)));
 				ans.add(new FirstAction(new Point(size.x - 1, i)));
-				
 			}
 		}
 		return ans;
@@ -304,10 +308,61 @@ public class Board
 				{
 					ans++;
 				}
+				if(ArraylistHelper.containsInstance(tile.getPieces(),Player.class))
+				{
+					Player player = null;
+					for(int k = 0; k < tile.getPieces().size(); k++)
+					{
+						if(tile.getPieces().get(k) instanceof Player)
+						{
+							player = (Player) tile.getPieces().get(k);
+							break;
+						}
+					}
+					if(player.isCarry())
+					{
+						ans++;
+					}
+				}
 			}
 		}
 		
 		return ans;
+	}
+	
+	public boolean isGameOver()
+	{
+		return isWin() || isLose();
+	}
+	
+	public boolean isWin()
+	{
+		return rescued >= 7;
+	}
+	
+	public boolean isLose()
+	{
+		return deads >= 4 || numberOfWallDamage() >= 21;
+	}
+	
+	public void kill()
+	{
+		deads++;
+	}
+	
+	public void rescue()
+	{
+		rescued++;
+	}
+	
+	public int getDeads()
+	{
+		return deads;
+	}
+	
+	public int getRescued()
+	{
+		return rescued;
 	}
 	
 	//statics functions
@@ -405,4 +460,6 @@ public class Board
 		}
 		return null;
 	}
+	
+	
 }

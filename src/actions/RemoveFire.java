@@ -38,6 +38,6 @@ public class RemoveFire extends PlayerAction
 	@Override
 	public String toString()
 	{
-		return "RemoveFire "+direction.toString();
+		return "Remove fire "+direction.toString() + "   cost "+cost;
 	}
 }

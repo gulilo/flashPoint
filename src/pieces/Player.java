@@ -1,5 +1,6 @@
 package pieces;
 
+import actions.PlayerAction;
 import exeptions.ActionException;
 
 import java.awt.*;
@@ -10,6 +11,8 @@ public abstract class Player extends Piece
 	private Color color;
 	private String name;
 	
+	protected PlayerAction action;
+	
 	private int actionPoints;
 	private boolean carryVictim;
 	
@@ -18,7 +21,10 @@ public abstract class Player extends Piece
 		actionPoints = 4;
 		this.color = color;
 		this.name = name;
+		action = null;
 	}
+	
+	public abstract PlayerAction getAction();
 	
 	public int getActionPoints()
 	{
